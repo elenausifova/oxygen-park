@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Долина Кислорода</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@300;500;700&family=Playfair+Display:wght@400;600;700&family=Montserrat:wght@300;500;700&display=swap" rel="stylesheet">
+
+<style>
+
+/* ===== BASE ===== */
+*{margin:0;padding:0;box-sizing:border-box;}
+
+body{
+    font-family:'Montserrat', sans-serif;
+    background:#050505;
+    color:#fff;
+    overflow-x:hidden;
+    line-height:1.75;
+    text-shadow:0 2px 14px rgba(0,0,0,0.75);
+}
+
+/* ===== BACKGROUND ===== */
+.bg{
+    position:fixed;
+    inset:0;
+    background:url('park.jpg') center/cover no-repeat;
+    transform:scale(1.15);
+    z-index:-3;
+    animation:zoom 28s ease-in-out infinite alternate;
+    filter:brightness(1.25) saturate(1.25);
+}
+
+@keyframes zoom{
+    0%{transform:scale(1.12);}
+    100%{transform:scale(1.22);}
+}
+
+/* LIGHT */
+.glow{
+    position:fixed;
+    inset:0;
+    z-index:-2;
+    background:
+        radial-gradient(circle at 25% 30%, rgba(255,255,255,0.30), transparent 45%),
+        radial-gradient(circle at 75% 25%, rgba(0,255,179,0.18), transparent 40%),
+        linear-gradient(to right, rgba(0,0,0,0.55), rgba(0,0,0,0.15));
+}
+
+/* FOG */
+.fog{
+    position:fixed;
+    inset:0;
+    z-index:-1;
+    background:
+        radial-gradient(circle at 30% 70%, rgba(255,255,255,0.08), transparent 60%),
+        radial-gradient(circle at 70% 40%, rgba(255,255,255,0.05), transparent 55%);
+    filter:blur(26px);
+}
+
+/* ===== HEADER ===== */
+header{
+    position:fixed;
+    top:0;
+    width:100%;
+    display:flex;
+    justify-content:flex-end;
+    padding:18px 55px;
+    background:rgba(0,0,0,0.45);
+    backdrop-filter:blur(18px);
+    z-index:1000;
+}
+
+.contacts{
+    display:flex;
+    gap:18px;
+    font-weight:700;
+}
+
+.contacts a{
+    color:#00ffb3;
+    text-decoration:none;
+}
+
+/* ===== HERO ===== */
+.hero{
+    height:100vh;
+    display:flex;
+    align-items:center;
+    padding:120px 60px;
+}
+
+.hero-content{
+    max-width:900px;
+}
+
+.motto{
+    font-family:'Playfair Display', serif;
+    font-size:38px;
+    color:#00ffb3;
+}
+
+.brand{
+    display:flex;
+    align-items:center;
+    gap:16px;
+}
+
+.brand img{
+    width:120px;
+}
+
+.brand span{
+    font-family:'Unbounded';
+    font-size:44px;
+}
+
+.subtitle{
+    font-size:18px;
+    color:#e0e0e0;
+    margin-bottom:25px;
+}
+
+.btn{
+    display:inline-block;
+    padding:16px 44px;
+    border-radius:50px;
+    font-weight:900;
+    background:linear-gradient(135deg,#00ffb3,#00a3ff);
+    color:#000;
+    cursor:pointer;
+    transition:.3s;
+}
+
+.btn:hover{
+    transform:scale(1.06);
+}
+
+/* ===== SECTIONS ===== */
+section{
+    padding:80px 60px;
+}
+
+h2{
+    font-family:'Playfair Display', serif;
+    font-size:38px;
+    margin-bottom:20px;
+}
+
+/* ===== ACTIVITIES ===== */
+.grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:18px;
+}
+
+.card{
+    background:rgba(255,255,255,0.05);
+    padding:26px;
+    border-radius:16px;
+}
+
+/* ===== SAVE LOVE ===== */
+.savelove{
+    display:flex;
+    gap:22px;
+    padding:32px;
+    background:rgba(255,255,255,0.04);
+    border-radius:20px;
+}
+
+.savelove h3{
+    font-family:'Playfair Display', serif;
+    font-size:26px;
+    margin-bottom:10px;
+}
+
+/* ===== GALLERY ===== */
+.gallery{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:12px;
+}
+
+.gallery img{
+    width:100%;
+    height:240px;
+    object-fit:cover;
+    border-radius:16px;
+    cursor:pointer;
+    transition:.4s;
+}
+
+.gallery img:hover{
+    transform:scale(1.05);
+}
+
+/* ===== LIGHTBOX ===== */
+.lightbox{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,0.95);
+    display:none;
+    align-items:center;
+    justify-content:center;
+    z-index:4000;
+}
+
+.lightbox.active{
+    display:flex;
+}
+
+.lightbox img{
+    max-width:90%;
+    max-height:90%;
+    border-radius:14px;
+}
+
+/* ===== BOOKING ===== */
+.modal{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,0.82);
+    display:none;
+    align-items:center;
+    justify-content:center;
+    z-index:5000;
+}
+
+.modal.active{
+    display:flex;
+}
+
+.box{
+    position:relative;
+    width:480px;
+    background:#111;
+    padding:28px;
+    border-radius:18px;
+    border:1px solid rgba(0,255,179,0.3);
+}
+
+.box input, .box select{
+    width:100%;
+    padding:12px;
+    margin:7px 0;
+    background:#0b0b0b;
+    border:1px solid #333;
+    color:#fff;
+}
+
+.pay{
+    width:100%;
+    padding:14px;
+    background:linear-gradient(135deg,#00ffb3,#00a3ff);
+    border:none;
+    font-weight:900;
+    cursor:pointer;
+}
+
+/* CLOSE BUTTON */
+.close{
+    position:absolute;
+    top:12px;
+    right:15px;
+    font-size:24px;
+    cursor:pointer;
+    opacity:0.7;
+    transition:.2s;
+}
+
+.close:hover{
+    opacity:1;
+    transform:scale(1.1);
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="bg"></div>
+<div class="glow"></div>
+<div class="fog"></div>
+
+<audio id="forest" loop>
+<source src="forest.mp3" type="audio/mpeg">
+</audio>
+
+<header>
+<div class="contacts">
+<a href="tel:213131">📞 21-31-31</a>
+<a href="mailto:extremeparkoii@mail.ru">✉ почта</a>
+<a href="https://maps.google.com/?q=Ставрополь+Полевая+178" target="_blank">📍 Локация</a>
+</div>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+<div class="hero-content">
+
+<div class="motto">ЖИЗНЬ В ДВИЖЕНИИ</div>
+
+<div class="brand">
+<img src="logo.png">
+<span>Долина Кислорода</span>
+</div>
+
+<div class="subtitle">
+Единственный премиальный экстрим-парк в Ставропольском крае • живой лес • 10 минут от города
+</div>
+
+<div class="btn" onclick="openBooking()">Забронировать</div>
+
+</div>
+</section>
+
+<!-- ACTIVITIES -->
+<section>
+<h2>Активности</h2>
+
+<div class="grid">
+
+<div class="card">
+⛷ <b>Горнолыжная трасса</b><br>
+Профессиональные склоны среди живого леса. Подходит как для спокойного катания, так и для активного экстремального спуска.
+</div>
+
+<div class="card">
+🛷 <b>Тюбинговая горка</b><br>
+Чистый адреналин без подготовки. Идеально для семейного отдыха и эмоций, которые запоминаются.
+</div>
+
+<div class="card">
+🎡 <b>8-метровые качели</b><br>
+Полёт над природой с панорамным видом на лес и территорию парка.
+</div>
+
+</div>
+</section>
+
+<!-- SAVE LOVE -->
+<section>
+<h2>Save Love Coffee</h2>
+
+<div class="savelove">
+<img src="savelove.png">
+<div>
+<h3>Премиальная кофейня с детской зоной</h3>
+<p>
+Уникальное пространство отдыха: пока дети находятся в современной игровой зоне под присмотром, родители наслаждаются кофе в атмосфере живого леса.
+Это часть экосистемы парка — комфорт, тишина и эстетика в одном месте.
+</p>
+</div>
+</div>
+
+</section>
+
+<!-- GALLERY -->
+<section>
+<h2>Галерея</h2>
+
+<div class="gallery">
+<img src="1.jpg">
+<img src="2.jpg">
+<img src="3.jpg">
+<img src="4.jpg">
+<img src="5.jpg">
+</div>
+
+</section>
+
+<!-- LIGHTBOX -->
+<div class="lightbox" id="lightbox">
+<img id="lightbox-img">
+</div>
+
+<!-- BOOKING -->
+<div class="modal" id="modal">
+<div class="box">
+
+<div class="close" onclick="closeBooking()">✕</div>
+
+<h3>Бронирование</h3>
+
+<select>
+<option>Горнолыжная трасса</option>
+<option>Тюбинг</option>
+<option>Качели</option>
+</select>
+
+<input type="date">
+<input type="time">
+<input type="text" placeholder="Имя">
+<input type="tel" placeholder="Телефон">
+
+<button class="pay">Оплатить</button>
+
+</div>
+</div>
+
+<script>
+
+/* SOUND */
+document.body.addEventListener("click",()=>{
+document.getElementById("forest").play();
+},{once:true});
+
+/* BOOKING */
+function openBooking(){
+document.getElementById('modal').classList.add('active');
+}
+
+function closeBooking(){
+document.getElementById('modal').classList.remove('active');
+}
+
+/* CLOSE ON BACKGROUND */
+document.getElementById('modal').onclick=(e)=>{
+if(e.target.id==='modal') closeBooking();
+}
+
+/* GALLERY */
+const images=document.querySelectorAll('.gallery img');
+const lightbox=document.getElementById('lightbox');
+const lightboxImg=document.getElementById('lightbox-img');
+
+let current=0;
+
+images.forEach((img,i)=>{
+img.onclick=()=>{
+current=i;
+lightbox.classList.add('active');
+lightboxImg.src=img.src;
+}
+});
+
+document.addEventListener('keydown',(e)=>{
+if(!lightbox.classList.contains('active')) return;
+
+if(e.key==='ArrowRight'){
+current=(current+1)%images.length;
+lightboxImg.src=images[current].src;
+}
+
+if(e.key==='ArrowLeft'){
+current=(current-1+images.length)%images.length;
+lightboxImg.src=images[current].src;
+}
+});
+
+lightbox.onclick=()=>{
+lightbox.classList.remove('active');
+}
+
+</script>
+
+</body>
+</html>
